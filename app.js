@@ -104,21 +104,79 @@ function renderUnavailable(reason) {
 
 function renderDisplay() {
   clearRoot();
+
   var wrap = el('div', 'wrap');
-  wrap.appendChild(el('div', 'eyebrow', EVENT_NAME));
-  wrap.appendChild(el('h1', 'headline', 'Scan to check in'));
+
+  wrap.appendChild(
+    el('div', 'eyebrow', EVENT_NAME)
+  );
+
+  wrap.appendChild(
+    el('h1', 'headline', 'Scan to check in')
+  );
 
   var card = el('div', 'qr-card');
+
   var canvas = document.createElement('canvas');
+
   card.appendChild(canvas);
+
   wrap.appendChild(card);
-  wrap.appendChild(el('p', 'qr-hint', 'You’ll get your group + number right away.'));
+
+  var hint = el(
+    'p',
+    'qr-hint',
+    'You’ll get your group + number right away.'
+  );
+
+  wrap.appendChild(hint);
+
   root.appendChild(wrap);
 
-  var target = location.origin + location.pathname;
-  loadQrLib().then(function () {
-    window.QRCode.toCanvas(canvas, target, { width: 260, margin: 1, color: { dark: '#241512', light: '#FBF5EC' } });
-  });
+  // Important:
+  // remove ?display / ?admin and point QR back to normal check-in page
+  var target =
+    location.origin +
+    location.pathname;
+
+  loadQrLib()
+    .then(function () {
+
+      return window.QRCode.toCanvas(
+        canvas,
+        target,
+        {
+          width: 280,
+          margin: 2,
+          color: {
+            dark: '#241512',
+            light: '#FBF5EC'
+          }
+        }
+      );
+
+    })
+    .then(function () {
+
+      console.log(
+        'QR code created for:',
+        target
+      );
+
+    })
+    .catch(function (err) {
+
+      console.error(
+        'QR code error:',
+        err
+      );
+
+      card.innerHTML =
+        '<p style="padding:20px;text-align:center;">QR code could not be loaded.</p>';
+
+      hint.textContent =
+        'Open this address manually: ' + target;
+    });
 }
 
 var qrLibPromise = null;
