@@ -122,16 +122,33 @@ function renderDisplay() {
 }
 
 var qrLibPromise = null;
+
 function loadQrLib() {
   if (window.QRCode) return Promise.resolve();
+
   if (qrLibPromise) return qrLibPromise;
+
   qrLibPromise = new Promise(function (resolve, reject) {
     var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
-    s.onload = resolve;
-    s.onerror = reject;
+
+    s.src =
+      'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.0/qrcode.min.js';
+
+    s.onload = function () {
+      if (window.QRCode) {
+        resolve();
+      } else {
+        reject(new Error('QR library loaded but QRCode was not found.'));
+      }
+    };
+
+    s.onerror = function () {
+      reject(new Error('QR library could not be loaded.'));
+    };
+
     document.head.appendChild(s);
   });
+
   return qrLibPromise;
 }
 
