@@ -281,14 +281,45 @@ function renderAdmin() {
 
 function resetEvent() {
   if (!configured) return;
-  Promise.all([
-    set(ref(db, 'registrations'), null),
-    set(ref(db, 'counter'), 1)
-  ]).then(function () {
-    location.reload();
-  }).catch(function () {
-    window.alert('Could not reset — please try again.');
-  });
+
+  var registrationsRef = ref(db, 'registrations');
+
+  get(registrationsRef)
+    .then(function (snap) {
+
+      var deletes = [];
+
+      snap.forEach(function (child) {
+        deletes.push(
+          set(ref(db, 'registrations/' + child.key), null)
+        );
+      });
+
+      return Promise.all(deletes);
+
+    })
+    .then(function () {
+
+      // Reset numbering so next guest receives No. 1
+      return set(ref(db, 'counter'), 1);
+
+    })
+    .then(function () {
+
+      window.alert('Event reset successfully.');
+
+      location.reload();
+
+    })
+    .catch(function (err) {
+
+      console.error('Reset failed:', err);
+
+      window.alert(
+        'Could not reset the event. Please try again.'
+      );
+
+    });
 }
 
 function attemptRegister(deviceId, attempt) {
