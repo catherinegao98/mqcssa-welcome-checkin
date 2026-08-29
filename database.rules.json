@@ -5,12 +5,18 @@
       ".write": true,
       ".validate": "newData.isNumber() && newData.val() > 0"
     },
+
     "registrations": {
       ".read": true,
       "$deviceId": {
         ".write": "!data.exists() || !newData.exists()",
         ".validate": "newData.hasChildren(['number','code','group','groupIndex','ts'])"
       }
+    },
+
+    "draw": {
+      ".read": true,
+      ".write": true
     }
   }
 }
