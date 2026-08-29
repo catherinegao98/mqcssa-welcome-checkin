@@ -6,7 +6,7 @@ import {
 
 var EVENT_NAME = 'MQCSSA Welcome Party';
 var TIERS = [
-  { key: 'third', label: 'Third Prize', count: 3, colorVar: '--tier-3' },
+  { key: 'third', label: 'Third Prize', count: 5, colorVar: '--tier-3' },
   { key: 'second', label: 'Second Prize', count: 2, colorVar: '--tier-2' },
   { key: 'first', label: 'First Prize', count: 1, colorVar: '--tier-1' }
 ];
