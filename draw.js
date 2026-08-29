@@ -1,4 +1,3 @@
-```javascript
 import { firebaseConfig } from './firebase-config.js';
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
@@ -1545,4 +1544,3 @@ function init() {
 
 
 init();
-```
